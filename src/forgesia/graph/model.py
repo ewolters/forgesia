@@ -48,12 +48,18 @@ class Node:
     @property
     def confidence(self) -> float:
         """Current belief: E[Beta(α, β)] = α / (α + β)."""
-        return self.alpha / (self.alpha + self.beta)
+        total = self.alpha + self.beta
+        if total == 0:
+            return 0.5
+        return self.alpha / total
 
     @property
     def uncertainty(self) -> float:
         """Uncertainty: std(Beta) normalized to [0, 1]."""
-        var = (self.alpha * self.beta) / ((self.alpha + self.beta) ** 2 * (self.alpha + self.beta + 1))
+        total = self.alpha + self.beta
+        if total == 0:
+            return 1.0
+        var = (self.alpha * self.beta) / (total ** 2 * (total + 1))
         return min(1.0, var ** 0.5 / 0.5)
 
     @property

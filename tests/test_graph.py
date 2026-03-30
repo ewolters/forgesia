@@ -46,6 +46,13 @@ class TestCausalGraph:
         g.add_edge(Edge(id="e1", source="a", target="b"))
         assert g.n_edges == 1
 
+    def test_zero_alpha_beta_node(self):
+        """Node(alpha=0, beta=0) should not crash on property access."""
+        n = Node(id="z", label="zero", alpha=0.0, beta=0.0)
+        assert n.confidence == 0.5  # uninformative prior
+        assert n.uncertainty == 1.0  # maximum uncertainty
+        assert n.sample_size == 0.0
+
     def test_self_loop_rejected(self):
         g = CausalGraph()
         g.add_node(Node(id="a"))
